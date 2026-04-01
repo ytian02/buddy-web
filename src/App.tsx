@@ -56,19 +56,33 @@ export default function App(): JSX.Element {
       if (!companion) return
 
       const userMessage = createMessage('user', input)
-      const reply = generateBuddyReply(input, companion, messages)
-      const assistantMessage = createMessage('assistant', reply.content)
-      const nextMessages = [...messages, userMessage, assistantMessage]
+      const pendingMessages = [...messages, userMessage]
 
-      setMessages(nextMessages)
-      persistChat(nextMessages)
-      setReaction(reply.content)
+      setMessages(pendingMessages)
+      persistChat(pendingMessages)
+      setReaction(`${companion.name} gathers a tiny thought...`)
       setUiState({
-        mood: reply.mood,
+        mood: 'thinking',
         speaking: true,
         idle: false,
         lastInteractionAt: Date.now(),
       })
+
+      window.setTimeout(() => {
+        const reply = generateBuddyReply(input, companion, pendingMessages)
+        const assistantMessage = createMessage('assistant', reply.content)
+        const nextMessages = [...pendingMessages, assistantMessage]
+
+        setMessages(nextMessages)
+        persistChat(nextMessages)
+        setReaction(reply.content)
+        setUiState({
+          mood: reply.mood,
+          speaking: true,
+          idle: false,
+          lastInteractionAt: Date.now(),
+        })
+      }, 520)
     },
     [companion, messages],
   )
@@ -86,7 +100,7 @@ export default function App(): JSX.Element {
     persistChat(nextMessages)
     setReaction(assistantMessage.content)
     setUiState({
-      mood: 'excited',
+      mood: 'happy',
       speaking: true,
       idle: false,
       lastInteractionAt: Date.now(),
@@ -104,7 +118,7 @@ export default function App(): JSX.Element {
     persistChat([welcome])
     setReaction(`A new companion hatches. Say hi to ${nextCompanion.name}.`)
     setUiState({
-      mood: 'curious',
+      mood: 'happy',
       speaking: true,
       idle: false,
       lastInteractionAt: Date.now(),
@@ -145,12 +159,13 @@ export default function App(): JSX.Element {
         <div className="hero-copy">
           <p className="eyebrow">Buddy Web</p>
           <h1>
-            A tiny browser companion, extracted from the Claude Code Buddy idea.
+            A tiny terminal companion, grown from the Claude Code Buddy idea.
           </h1>
           <p className="hero-text">
-            This first version keeps the companion feel: deterministic hatching,
-            rarity, personality, idle animation, reactions, and a lightweight
-            chat loop that can be swapped for a real API later.
+            The default display now leans back toward the original Buddy
+            feeling: a small familiar that lives beside the chat box, keeps you
+            company, and still sits on top of a longer-term mascot system for
+            skins, stages, and future growth.
           </p>
           {lastAssistantMessage ? (
             <p className="last-quote">

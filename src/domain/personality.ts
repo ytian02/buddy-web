@@ -1,24 +1,10 @@
-import type { CompanionBones, Species } from './types'
+import { GROWTH_STAGE_CONFIGS, SPECIES_TEMPLATE_CONFIGS, THEME_SKIN_CONFIGS } from './mascotSystem'
+import type { Companion, CompanionBones } from './types'
 
-const SPECIES_STYLE: Record<Species, string[]> = {
-  duck: ['chirpy', 'plucky', 'quick-footed'],
-  goose: ['honest', 'bossy', 'protective'],
-  blob: ['soft', 'goofy', 'dreamy'],
-  cat: ['judgy', 'graceful', 'secretly caring'],
-  dragon: ['majestic', 'dramatic', 'confident'],
-  octopus: ['crafty', 'inventive', 'observant'],
-  owl: ['scholarly', 'calm', 'sharp-eyed'],
-  penguin: ['formal', 'sweet', 'steady'],
-  turtle: ['patient', 'solid', 'slow-burning'],
-  snail: ['gentle', 'cozy', 'thoughtful'],
-  ghost: ['mischievous', 'whispery', 'mellow'],
-  axolotl: ['sparkly', 'curious', 'friendly'],
-  capybara: ['zen', 'warm', 'easygoing'],
-  cactus: ['dry-humored', 'resilient', 'independent'],
-  robot: ['precise', 'earnest', 'helpful'],
-  rabbit: ['skittish', 'fast-thinking', 'bright'],
-  mushroom: ['mystic', 'sleepy', 'comforting'],
-  chonk: ['unbothered', 'big-hearted', 'snacky'],
+const TEMPLATE_STYLE: Record<CompanionBones['speciesTemplate'], string[]> = {
+  cat: ['sharp', 'graceful', 'warm under pressure'],
+  bird: ['nimble', 'bright', 'quick to notice details'],
+  spirit: ['quiet', 'strange', 'softly reassuring'],
 }
 
 const NAME_PREFIXES = [
@@ -37,7 +23,7 @@ const NAME_PREFIXES = [
 ]
 
 const NAME_SUFFIXES = [
-  'bean',
+  'beam',
   'buddy',
   'puff',
   'loop',
@@ -53,16 +39,22 @@ export function generateSoul(
   bones: CompanionBones,
   inspirationSeed: number,
 ): { name: string; personality: string } {
-  const style = SPECIES_STYLE[bones.species]
+  const style = TEMPLATE_STYLE[bones.speciesTemplate]
+  const template = SPECIES_TEMPLATE_CONFIGS[bones.speciesTemplate]
+  const skin = THEME_SKIN_CONFIGS[bones.themeSkin]
+  const growth = GROWTH_STAGE_CONFIGS[bones.growthStage]
   const first = NAME_PREFIXES[inspirationSeed % NAME_PREFIXES.length]!
   const second = NAME_SUFFIXES[(inspirationSeed * 7) % NAME_SUFFIXES.length]!
   const name = `${first}${second}`
-  const shinyLine = bones.shiny ? 'They sparkle when they get excited.' : ''
+  const sparkleLine = bones.shiny
+    ? 'They leave a faint stardust trail whenever they get excited.'
+    : ''
 
   const personality = [
-    `${name} is a ${style[0]}, ${style[1]} little ${bones.species}.`,
-    `They tend to sound ${style[2]} and companionable instead of robotic.`,
-    shinyLine,
+    `${name} is a ${style[0]}, ${style[1]} little ${template.promptNoun}.`,
+    `Their ${skin.label.toLowerCase()} keeps them feeling ${style[2]} instead of robotic.`,
+    `Right now they read as ${growth.label.toLowerCase()}: ${growth.description.toLowerCase()}`,
+    sparkleLine,
   ]
     .filter(Boolean)
     .join(' ')
@@ -70,6 +62,9 @@ export function generateSoul(
   return { name, personality }
 }
 
-export function buildWelcomeMessage(name: string, species: Species): string {
-  return `Hi, I'm ${name}, your tiny ${species} companion. I'll keep you company and answer in short, playful bursts.`
+export function buildWelcomeMessage(name: string, companion: Pick<Companion, 'growthStage' | 'name' | 'speciesTemplate' | 'themeSkin'>): string {
+  const template = SPECIES_TEMPLATE_CONFIGS[companion.speciesTemplate]
+  const growth = GROWTH_STAGE_CONFIGS[companion.growthStage]
+
+  return `Hi, I'm ${name}, your ${growth.label.toLowerCase()} ${template.promptNoun}. I'll stay close, keep the vibe calm, and answer in short companion bursts.`
 }

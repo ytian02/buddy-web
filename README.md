@@ -4,6 +4,8 @@ Buddy Web is a browser companion project inspired by the Buddy idea inside `clau
 
 It does not try to recreate the full Claude Code REPL. Instead, it focuses on a friendlier long-term direction: a tiny web-based companion with personality, deterministic hatching, lightweight interaction, and room for future model integration.
 
+The current product direction is a little sharper than that original pitch: Buddy is moving toward a single flagship cyber pet mascot with a stable rig, layered theme skins, staged growth, and room for future customization without losing brand identity.
+
 ## Preview
 
 Current UI preview:
@@ -19,11 +21,22 @@ Current UI preview:
 ## Current features
 
 - Seed-based Buddy hatching
-- Rarity, species, hat, and stat generation
+- A single Buddy mascot system with rig, skin, growth stage, and accessory layers
+- Rarity, stage-aware stats, and deterministic appearance generation
 - `localStorage` persistence for companion and chat history
 - Lightweight chat area with rule-based replies
 - `Pet buddy` and `Re-hatch` interactions
-- Browser sprite rendering with light animation
+- Browser mascot rendering with light cyber-pet animation
+
+## Mascot system
+
+- `buddy-core` is the primary mascot identity
+- `speciesTemplate` defines the silhouette family, not a separate art project
+- `themeSkin` controls the visual language and palette without changing the underlying rig
+- `growthStage` supports hatchling, buddy, and evolved appearance states
+- `accessorySet` keeps hats, badge marks, and aura effects layered and replaceable
+
+Design notes for this system live in `docs/mascot-system.md`.
 
 ## Not in scope right now
 
@@ -101,7 +114,7 @@ npm run check
 buddy-web/
   src/
     adapters/    # browser storage and future integration boundaries
-    domain/      # companion, replies, sprites, types
+    domain/      # companion generation, mascot system, replies, types
     ui/          # UI components
   docs/          # roadmap, decisions, archived notes, images
   scripts/       # lightweight maintenance scripts
@@ -118,15 +131,16 @@ buddy-web/
 ## Current status
 
 - Current version: `0.1.0`
-- Current stage: frontend demo with stable local interaction
-- Current focus: polish the experience, improve reply quality, and prepare for future API integration
+- Current stage: frontend demo with a stable mascot system foundation
+- Current focus: lock the Buddy visual identity, improve reply quality, and prepare for future API integration
 
 ## Next priorities
 
 - Improve Buddy mood and reaction feedback
 - Reduce repeated replies
-- Strengthen project docs and release rhythm
+- Add customization flows on top of the mascot system
 - Keep the adapter layer clean for future real-model integration
+- Extend the mascot system with more templates and skins only after the core rig feels right
 
 ## Before pushing new changes
 
@@ -153,3 +167,5 @@ They are already covered by `.gitignore`.
 - `RELEASE_CHECKLIST.md`: milestone release checklist
 - `docs/roadmap.md`: roadmap
 - `docs/decisions.md`: key product and architecture decisions
+- `docs/mascot-system.md`: mascot rig, skin, and growth system rules
+- `docs/mascot-direction-history.md`: the design discussion history behind Buddy's default visual direction

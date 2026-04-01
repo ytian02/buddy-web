@@ -36,6 +36,12 @@ export function getOrCreateCompanion(): Companion {
       personality: companion.personality,
       hatchedAt: companion.hatchedAt,
       seed: companion.seed,
+      customization: {
+        speciesTemplate: companion.speciesTemplate,
+        themeSkin: companion.themeSkin,
+        growthStage: companion.growthStage,
+        accessorySet: companion.accessorySet,
+      },
     } satisfies StoredCompanion),
   )
 

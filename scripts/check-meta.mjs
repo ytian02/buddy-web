@@ -13,6 +13,8 @@ const requiredFiles = [
   '.gitignore',
   'docs/roadmap.md',
   'docs/decisions.md',
+  'docs/mascot-system.md',
+  'docs/mascot-direction-history.md',
 ]
 
 const missing = requiredFiles.filter((relativePath) => {

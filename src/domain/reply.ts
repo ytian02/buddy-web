@@ -57,40 +57,40 @@ export function generateBuddyReply(
   if (/(hello|hi|hey|yo|good morning|good evening)/.test(normalized)) {
     return {
       content: pickByLength(normalized, GREETING_REPLIES),
-      mood: 'excited',
+      mood: 'happy',
     }
   }
 
   if (/(pet|pat|hug|boop|poke)/.test(normalized)) {
     return {
       content: pickByLength(normalized, PET_REPLIES),
-      mood: 'excited',
+      mood: 'happy',
     }
   }
 
   if (/(sad|stuck|tired|anxious|overwhelmed|hard)/.test(normalized)) {
     return {
       content: pickByLength(normalized, COMFORT_REPLIES),
-      mood: 'comforting',
+      mood: 'idle',
     }
   }
 
   if (/(done|fixed|shipped|won|passed|solved)/.test(normalized)) {
     return {
       content: pickByLength(normalized, PROUD_REPLIES),
-      mood: 'proud',
+      mood: 'happy',
     }
   }
 
   if (addressed) {
     return {
       content: `${companion.name} reporting in. ${companion.personality.split('.')[0]}.`,
-      mood: 'curious',
+      mood: 'happy',
     }
   }
 
   return {
     content: pickByLength(normalized, DEFAULT_REPLIES),
-    mood: 'curious',
+    mood: 'idle',
   }
 }

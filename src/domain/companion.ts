@@ -1,19 +1,20 @@
 import { hashString, mulberry32, pick } from './hash'
 import { buildWelcomeMessage, generateSoul } from './personality'
 import type {
+  AccessorySet,
   ChatMessage,
   Companion,
   CompanionBones,
+  GrowthStage,
   Rarity,
   StatName,
   StoredCompanion,
+  ThemeSkin,
 } from './types'
 import {
-  EYES,
   HATS,
   RARITIES,
   RARITY_WEIGHTS,
-  SPECIES,
   STAT_NAMES,
 } from './types'
 
@@ -71,15 +72,65 @@ function rollStats(
   return stats
 }
 
+function resolveGrowthStage(rarity: Rarity): GrowthStage {
+  switch (rarity) {
+    case 'common':
+    case 'uncommon':
+      return 'hatchling'
+    case 'rare':
+    case 'epic':
+      return 'buddy'
+    case 'legendary':
+      return 'evolved'
+  }
+}
+
+function rollThemeSkin(rng: () => number, rarity: Rarity, shiny: boolean): ThemeSkin {
+  if (shiny || rarity === 'legendary') return 'grove'
+  return rng() < 0.2 ? 'grove' : 'signal'
+}
+
+function rollAccessorySet(
+  rng: () => number,
+  rarity: Rarity,
+  themeSkin: ThemeSkin,
+  shiny: boolean,
+): AccessorySet {
+  const head =
+    rarity === 'common' ? 'none' : pick(rng, HATS.filter((hat) => hat !== 'none'))
+
+  return {
+    head,
+    badge:
+      themeSkin === 'grove'
+        ? rarity === 'common'
+          ? 'leaf'
+          : pick(rng, ['leaf', 'core', 'rune'] as const)
+        : rarity === 'common'
+          ? 'core'
+          : pick(rng, ['core', 'rune'] as const),
+    aura: shiny
+      ? 'stardust'
+      : themeSkin === 'grove'
+        ? 'grove'
+        : rarity === 'common'
+          ? 'none'
+          : 'signal',
+  }
+}
+
 export function rollCompanion(seed: string): RollResult {
   const rng = mulberry32(hashString(seed + SALT))
   const rarity = rollRarity(rng)
+  const shiny = rng() < 0.015
+  const themeSkin = rollThemeSkin(rng, rarity, shiny)
   const bones: CompanionBones = {
     rarity,
-    species: pick(rng, SPECIES),
-    eye: pick(rng, EYES),
-    hat: rarity === 'common' ? 'none' : pick(rng, HATS),
-    shiny: rng() < 0.01,
+    speciesTemplate: 'cat',
+    themeSkin,
+    growthStage: resolveGrowthStage(rarity),
+    accessorySet: rollAccessorySet(rng, rarity, themeSkin, shiny),
+    shiny,
     stats: rollStats(rng, rarity),
   }
 
@@ -89,18 +140,33 @@ export function rollCompanion(seed: string): RollResult {
   }
 }
 
+function mergeCustomization(
+  bones: CompanionBones,
+  stored?: StoredCompanion,
+): CompanionBones {
+  if (!stored?.customization) return bones
+
+  return {
+    ...bones,
+    ...stored.customization,
+    accessorySet: stored.customization.accessorySet ?? bones.accessorySet,
+  }
+}
+
 export function createCompanion(seed: string, stored?: StoredCompanion): Companion {
   const { bones, inspirationSeed } = rollCompanion(seed)
+  const resolvedBones = mergeCustomization(bones, stored)
   const soul = stored ?? {
-    ...generateSoul(bones, inspirationSeed),
+    ...generateSoul(resolvedBones, inspirationSeed),
     hatchedAt: Date.now(),
     seed,
   }
 
   return {
-    ...bones,
+    ...resolvedBones,
     ...soul,
     seed,
+    identity: 'buddy-core',
   }
 }
 
@@ -108,7 +174,7 @@ export function getWelcomeChat(companion: Companion): ChatMessage {
   return {
     id: `welcome-${companion.seed}`,
     role: 'assistant',
-    content: buildWelcomeMessage(companion.name, companion.species),
+    content: buildWelcomeMessage(companion.name, companion),
     createdAt: Date.now(),
   }
 }
