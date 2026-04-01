@@ -1,136 +1,142 @@
 # Buddy Web
 
-Buddy Web 是一个从 `claude-code-source-code` 中 Buddy 概念提炼出来的独立网页项目。
+Buddy Web is a browser companion project inspired by the Buddy idea inside `claude-code-source-code`.
 
-它不是 Claude Code REPL 的完整复刻，而是一个更适合长期演进的浏览器 companion 应用：保留桌宠感、人格感、可孵化 companion 的设定，并逐步扩展交互、状态和未来的模型接入能力。
+It does not try to recreate the full Claude Code REPL. Instead, it focuses on a friendlier long-term direction: a tiny web-based companion with personality, deterministic hatching, lightweight interaction, and room for future model integration.
 
-## 项目目标
+## Preview
 
-- 保留 Buddy 的陪伴感和人格化体验
-- 用 deterministic companion 机制支撑长期扩展
-- 先用轻量前端体验跑通，再逐步接入更强的对话能力
+Current UI preview:
 
-## 当前已实现
+![Buddy Web preview](./docs/images/buddy-web-home-preview-v0.1.0.png)
 
-- 基于 seed 的 Buddy 孵化
-- 稀有度、物种、帽子、属性生成
-- `localStorage` 持久化 companion 与聊天记录
-- 基础聊天区与规则式回应
-- `Pet buddy` / `Re-hatch` 交互
-- 网页化 sprite 展示与轻量动画
+## Why this project exists
 
-## 当前不做什么
+- Keep the companion feel and personality of Buddy
+- Turn the idea into a standalone browser product
+- Start with a lightweight frontend experience, then grow toward richer interaction
 
-- 不追求复刻 Claude Code 的完整终端交互
-- 不在第一版直接接真实 LLM API
-- 不引入重型自动发布或 CI 流程
+## Current features
 
-## 环境要求
+- Seed-based Buddy hatching
+- Rarity, species, hat, and stat generation
+- `localStorage` persistence for companion and chat history
+- Lightweight chat area with rule-based replies
+- `Pet buddy` and `Re-hatch` interactions
+- Browser sprite rendering with light animation
+
+## Not in scope right now
+
+- Full Claude Code terminal behavior
+- Direct LLM API integration in the first version
+- Heavy release automation or CI-first workflows
+
+## Requirements
 
 - Node.js `>= 18.18.0`
 - npm `>= 9`
 
-建议先确认版本：
+Check your local environment first:
 
 ```bash
 node --version
 npm --version
 ```
 
-## 快速开始
+## Quick Start
 
-如果项目已经上传到 GitHub，用户可以直接 clone 后运行：
+Clone and run locally:
 
 ```bash
-git clone <your-github-repo-url>
+git clone https://github.com/ytian02/buddy-web.git
 cd buddy-web
 npm install
 npm run start
 ```
 
-启动后，Vite 会输出本地访问地址，通常是：
+Vite will print the local address, usually:
 
 ```text
 http://localhost:5173
 ```
 
-如果你只是本地开发，也可以用：
+If you only want standard local development mode:
 
 ```bash
 npm run dev
 ```
 
-## 构建与检查
+## Build and checks
 
-构建生产包：
+Build the production bundle:
 
 ```bash
 npm run build
 ```
 
-检查维护文档和版本元信息：
+Check project metadata and maintenance files:
 
 ```bash
 npm run check:meta
 ```
 
-一键执行项目检查：
+Run the full local check:
 
 ```bash
 npm run check
 ```
 
-## 常用脚本
+## Scripts
 
-- `npm run start`：以对外可访问方式启动开发服务器
-- `npm run dev`：本地开发模式
-- `npm run build`：构建生产包
-- `npm run preview`：预览构建结果
-- `npm run check:meta`：检查维护文档和版本信息
-- `npm run check`：执行维护检查和构建检查
+- `npm run start`: start Vite with host exposure
+- `npm run dev`: local development mode
+- `npm run build`: production build
+- `npm run preview`: preview the production build
+- `npm run check:meta`: verify maintenance files and version metadata
+- `npm run check`: run metadata checks and production build
 
-## 目录结构
+## Project structure
 
 ```text
 buddy-web/
   src/
-    adapters/    # 浏览器存储等边界层
-    domain/      # companion、回复、sprite、类型
-    ui/          # 页面组件
-  docs/          # 路线图、决策记录、归档
-  scripts/       # 轻量维护脚本
+    adapters/    # browser storage and future integration boundaries
+    domain/      # companion, replies, sprites, types
+    ui/          # UI components
+  docs/          # roadmap, decisions, archived notes, images
+  scripts/       # lightweight maintenance scripts
 ```
 
-## 版本与维护
+## Versioning and maintenance
 
-- 版本号采用 SemVer
-- 变更历史统一记录在 `CHANGELOG.md`
-- 发布流程记录在 `RELEASE_CHECKLIST.md`
-- 版本规则说明记录在 `VERSIONING.md`
-- 提交信息采用 Conventional Commits
+- Versioning follows SemVer
+- Change history lives in `CHANGELOG.md`
+- Release steps live in `RELEASE_CHECKLIST.md`
+- Version rules live in `VERSIONING.md`
+- Commit messages follow Conventional Commits
 
-## 当前状态
+## Current status
 
-- 当前版本：`0.1.0`
-- 当前阶段：前端可演示版
-- 当前重点：打磨体验、增强回复机制、准备后续 API 接入边界
+- Current version: `0.1.0`
+- Current stage: frontend demo with stable local interaction
+- Current focus: polish the experience, improve reply quality, and prepare for future API integration
 
-## 下一阶段重点
+## Next priorities
 
-- 优化 Buddy 的状态与情绪反馈
-- 丰富回复策略，减少重复感
-- 增强项目文档和发布节奏
-- 为未来接真实模型预留更清晰的 adapter 层
+- Improve Buddy mood and reaction feedback
+- Reduce repeated replies
+- Strengthen project docs and release rhythm
+- Keep the adapter layer clean for future real-model integration
 
-## 上传到 GitHub 前建议检查
+## Before pushing new changes
 
-在准备公开仓库前，建议先执行：
+Run:
 
 ```bash
 npm run check
 ```
 
-然后确认以下内容不需要进入版本控制：
+These generated files should stay out of version control:
 
 - `node_modules/`
 - `dist/`
@@ -138,12 +144,12 @@ npm run check
 - `vite.config.js`
 - `vite.config.d.ts`
 
-这些内容已经写进 `.gitignore`。
+They are already covered by `.gitignore`.
 
-## 维护文档
+## Maintenance docs
 
-- `CHANGELOG.md`：版本变更历史
-- `VERSIONING.md`：版本号规则
-- `RELEASE_CHECKLIST.md`：里程碑发版流程
-- `docs/roadmap.md`：路线图
-- `docs/decisions.md`：关键设计决策
+- `CHANGELOG.md`: version history
+- `VERSIONING.md`: versioning rules
+- `RELEASE_CHECKLIST.md`: milestone release checklist
+- `docs/roadmap.md`: roadmap
+- `docs/decisions.md`: key product and architecture decisions

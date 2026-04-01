@@ -10,12 +10,14 @@
 - 新增 `docs/roadmap.md` 与 `docs/decisions.md`
 - 新增 `npm run check:meta` 用于检查维护型文件是否齐全
 - 新增 `.gitignore`，明确忽略依赖、构建产物和本地构建信息
+- 新增首版界面预览截图，已同步到 `README.md`
 
 ### Changed
 
 - 明确后续版本号采用 SemVer
 - 明确后续提交信息采用 Conventional Commits
 - 明确后续发版节奏采用功能里程碑版，而不是每次小改动都升版本
+- 调整 `README.md` 结构，使 GitHub 首页优先展示项目预览和快速开始
 
 ### Fixed
 
